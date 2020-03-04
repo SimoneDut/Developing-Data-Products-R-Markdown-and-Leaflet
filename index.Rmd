@@ -1,0 +1,104 @@
+---
+title: "R Markdown and Leaflet"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 10, fig.height = 8)
+```
+
+```{r chunk_1}
+## Dependencies
+library(leaflet)
+```
+
+```{r chunk_2}
+## Raw data
+raw_data <- list()
+i <- 0
+
+## ITEM 1 ##
+i <- i + 1
+type <- "Food"
+name <- "Antica Bruschetteria Pautasso"
+link <- "https://www.pautasso.it/"
+lat <- 45.076500
+lng <- 7.681699
+raw_data[[i]] <- list(type = type, name = name, link = link, lat = lat, lng = lng)
+
+## ITEM 2 ##
+i <- i + 1
+type <- "Food"
+name <- "Ristorante Solferino"
+link <- "https://ristorantesolferino.com/"
+lat <- 45.069730
+lng <- 7.678375
+raw_data[[i]] <- list(type = type, name = name, link = link, lat = lat, lng = lng)
+
+## ITEM 3 ##
+i <- i + 1
+type <- "Food"
+name <- "Antica Trattoria del Sole"
+link <- "https://www.anticatrattoriadelsole.eu/"
+lat <- 45.072674
+lng <- 7.636772
+raw_data[[i]] <- list(type = type, name = name, link = link, lat = lat, lng = lng)
+
+## ITEM 4 ##
+i <- i + 1
+type <- "Culture"
+name <- "Egyptian Museum"
+link <- "https://museoegizio.it/en/"
+lat <- 45.068551
+lng <- 7.684851
+raw_data[[i]] <- list(type = type, name = name, link = link, lat = lat, lng = lng)
+
+## ITEM 5 ##
+i <- i + 1
+type <- "Culture"
+name <- "University of Turin"
+link <- "https://en.unito.it/"
+lat <- 45.070080
+lng <- 7.689630
+raw_data[[i]] <- list(type = type, name = name, link = link, lat = lat, lng = lng)
+
+## ITEM 6 ##
+i <- i + 1
+type <- "Culture"
+name <- "Polytechnic University of Turin"
+link <- "https://www.polito.it/index.php?lang=en"
+lat <- 45.063129
+lng <- 7.662011
+raw_data[[i]] <- list(type = type, name = name, link = link, lat = lat, lng = lng)
+
+## IMAGES ##
+Food <- "http://icons.iconarchive.com/icons/webalys/kameleon.pics/512/Food-Dome-icon.png"
+Culture <- "http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/128/Categories-applications-education-university-icon.png"
+images <- list(Culture = Culture, Food = Food)
+```
+
+```{r chunk_3}
+## Data preparation
+lat <- numeric()
+lng <- numeric()
+popup <- character()
+iconUrl <- character()
+for (elem in raw_data) {
+  lat <- c(lat, elem$lat)
+  lng <- c(lng, elem$lng)
+  popup <- c(popup, paste("<a href='", elem$link, "'>", elem$name, "</a>", sep = ""))
+  iconUrl <- c(iconUrl, images[[elem$type]])
+}
+icon <- icons(iconUrl = iconUrl, iconWidth = 32, iconHeight = 32, iconAnchorX = 16, iconAnchorY = 16)
+```
+
+## March 4, 2020
+
+## Some Restaurants and Cultural Institutions in Turin (Italy)
+
+```{r chunk_4}
+## Map creation
+leaflet() %>%
+addTiles() %>%
+addMarkers(lat = lat, lng = lng, popup = popup, icon = icon, clusterOptions = markerClusterOptions())
+```
